@@ -1,3 +1,4 @@
+
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -20,6 +21,7 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (store = initialState, action) => {
+  console.log('ACTION: ', action)
   if (action.type==='VOTE') {
     const old = store.filter(a => a.id !==action.id)
     const voted = store.find(a => a.id === action.id)
@@ -32,6 +34,20 @@ const reducer = (store = initialState, action) => {
   }
 
   return store
+}
+
+export const handleSubmit = (content) => {
+  return {
+    type: 'CREATE',
+    content: content
+  }
+}
+
+export const handleVote = (content) => {
+  return {
+    type: 'VOTE',
+    id: content
+  }
 }
 
 export default reducer
