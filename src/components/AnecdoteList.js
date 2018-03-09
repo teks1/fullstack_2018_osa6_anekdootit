@@ -1,22 +1,18 @@
 import React from 'react'
 import Filter from '../components/Filter'
+import { handleVote } from './../reducers/anecdoteReducer'
+import { showNotification } from './../reducers/notificationReducer'
+import { connect } from 'react-redux'
 
 class AnecdoteList extends React.Component {
+
   render() {
-    const anecdotes = this.props.store.getState().anecdotes
-    const filter = this.props.store.getState().filter
-    const searchTerm = (anecdote) => {
-      if (filter === 0) {
-        return true
-      }
-      return anecdote.content.toLowerCase().includes(filter.toLowerCase())
-    }
-    const anecdotesToShow = anecdotes.filter(searchTerm)
+    const anecdotesToShow = this.props.anecdotesToShow
     return (
       <div>
         <h2>Anecdotes</h2>
-        <Filter store={this.props.store} />
-        {anecdotesToShow.sort((a, b) => b.votes - a.votes).map(anecdote =>
+        <Filter />
+        {anecdotesToShow.map(anecdote =>
           <div key={anecdote.id}>
             <div>
               {anecdote.content}
@@ -24,8 +20,8 @@ class AnecdoteList extends React.Component {
             <div>
               has {anecdote.votes}
               <button onClick={() => {
-                this.props.store.dispatch({ type: 'VOTE', id: anecdote.id }),
-                this.props.store.dispatch({ type: 'SHOW', notification: 'you voted' })}
+                this.props.handleVote(anecdote.id),
+                this.props.showNotification('you voted')}
               }>
                 vote
               </button>
@@ -37,4 +33,18 @@ class AnecdoteList extends React.Component {
   }
 }
 
-export default AnecdoteList
+const searchAnecdotes = (anecdotes, filter) => {
+  if (filter === 0) {
+    return true
+  }
+  return anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase()))
+}
+
+const mapStateToProps = (state) => {
+  return {
+    anecdotesToShow: searchAnecdotes(state.anecdotes, state.filter).sort((a, b) => b.votes - a.votes)
+  }
+}
+
+const ConnectedAnecdoteList = connect(mapStateToProps, { handleVote, showNotification })(AnecdoteList)
+export default ConnectedAnecdoteList
