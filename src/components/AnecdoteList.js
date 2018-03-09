@@ -1,11 +1,19 @@
 import React from 'react'
 import Filter from '../components/Filter'
-import { handleVote } from './../reducers/anecdoteReducer'
+import anecdoteService from './../services/anecdotes'
+import { update } from './../reducers/anecdoteReducer'
 import { showNotification } from './../reducers/notificationReducer'
 import { connect } from 'react-redux'
 
 class AnecdoteList extends React.Component {
-
+  voteAnecdote = async (anecdote) => {
+    //this.props.handleVote(anecdote.id)
+    await anecdoteService.updateVotes(anecdote.id, ++anecdote.votes)
+    this.props.update()
+    const notification = 'you voted ' + anecdote.content
+    this.props.showNotification(notification)
+    setTimeout(() => {this.props.showNotification(null)}, 5000)
+  }
   render() {
     const anecdotesToShow = this.props.anecdotesToShow
     return (
@@ -19,10 +27,7 @@ class AnecdoteList extends React.Component {
             </div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => {
-                this.props.handleVote(anecdote.id),
-                this.props.showNotification('you voted')}
-              }>
+              <button onClick={() => this.voteAnecdote(anecdote)}>
                 vote
               </button>
             </div>
@@ -34,6 +39,7 @@ class AnecdoteList extends React.Component {
 }
 
 const searchAnecdotes = (anecdotes, filter) => {
+  console.log(anecdotes)
   if (filter === 0) {
     return true
   }
@@ -46,5 +52,5 @@ const mapStateToProps = (state) => {
   }
 }
 
-const ConnectedAnecdoteList = connect(mapStateToProps, { handleVote, showNotification })(AnecdoteList)
+const ConnectedAnecdoteList = connect(mapStateToProps, { update, showNotification })(AnecdoteList)
 export default ConnectedAnecdoteList
