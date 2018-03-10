@@ -9,9 +9,11 @@ const filterReducer = (state = '', action) => {
 }
 
 export const filterChange = (filter) => {
-  return {
-    type: 'SET_FILTER',
-    filter: filter
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_FILTER',
+      filter: filter
+    })
   }
 }
 

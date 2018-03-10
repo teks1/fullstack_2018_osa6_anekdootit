@@ -8,6 +8,7 @@ class Filter extends React.Component {
     //this.props.store.dispatch({ type: 'SET_FILTER', filter: filter })
     this.props.filterChange(filter)
   }
+
   render() {
     const style = {
       marginBottom: 10

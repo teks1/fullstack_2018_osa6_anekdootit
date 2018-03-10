@@ -9,10 +9,8 @@ class AnecdoteForm extends React.Component {
   addAnecdote = async (event) => {
     event.preventDefault()
     const content = event.target.anecdote.value
-    //this.props.handleSubmit(content)
     event.target.anecdote.value = ''
-    const newAnecdote = await anecdoteService.createNew(content)
-    this.props.handleSubmit(newAnecdote)
+    this.props.handleSubmit(content)
     const notification = 'you added new anecdote'
     this.props.showNotification(notification)
     setTimeout(() => {this.props.showNotification(null)}, 5000)

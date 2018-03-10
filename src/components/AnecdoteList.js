@@ -10,9 +10,8 @@ class AnecdoteList extends React.Component {
     //this.props.handleVote(anecdote.id)
     await anecdoteService.updateVotes(anecdote.id, ++anecdote.votes)
     this.props.update()
-    const notification = 'you voted ' + anecdote.content
-    this.props.showNotification(notification)
-    setTimeout(() => {this.props.showNotification(null)}, 5000)
+    const notification = `you voted '${anecdote.content}'`
+    this.props.showNotification(notification, 5)
   }
   render() {
     const anecdotesToShow = this.props.anecdotesToShow
